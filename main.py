@@ -32,7 +32,7 @@ def getHtml(url):
 def iterateLinks(subLinks):
 	for link in subLinks:
 		data = []
-		html = getHtml(BASE_URL + link.get('href'))
+		html = getHtml(BASE_URL + link.find('a').get('href'))
 		try:
 			asin = html.find('input', {'id':'ASIN'})
 			if str(asin) != NOT_FOUND:
@@ -42,9 +42,12 @@ def iterateLinks(subLinks):
 			title = html.find('span', {'id':'productTitle'}).get_text().strip()
 			if str(html.find('span', {'id':'priceblock_ourprice'})) != NOT_FOUND:
 				price = html.find('span', {'id':'priceblock_ourprice'}).get_text().split('AED')[1]
-
-			if str(html.find('span', {'id':'priceblock_saleprice'})) != NOT_FOUND:
+			elif str(html.find('span', {'class':'a-color-price'})) != NOT_FOUND:
+				price = html.find('span', {'class':'a-color-price'}).get_text().split('AED')[1]
+			elif str(html.find('span', {'id':'priceblock_saleprice'})) != NOT_FOUND:
 				price = html.find('span', {'id':'priceblock_saleprice'}).get_text().split('AED')[1]
+			else:
+				price = 'Price not found'
 
 			bullets = (html.find('div', {'id':'feature-bullets'}))
 			if str(bullets) != NOT_FOUND:
@@ -107,11 +110,12 @@ try:
 except:
 	count = 1
 
-while count <= 50:
+while count <= 200:
 	html = getHtml(startUrl + '&page=' + str(count))
-	links = html.find_all('a', {'class':'a-link-normal a-text-normal'})
+	links = html.find_all('h2', {'class':'a-size-mini a-spacing-none a-color-base s-line-clamp-2'})
 	if str(links) == NOT_FOUND:
 		break
+
 	iterateLinks(links)
 	print(str(count) + ' == Pages Done')
 	count += INCREMENT_ONE
