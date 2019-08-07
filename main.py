@@ -39,11 +39,11 @@ def iterateLinks(subLinks):
 				asin = asin.get('value')
 			else:
 				asin = 'ASIN Not Found'
-			if str(.get_text().strip()) != NOT_FOUND:
-				title = .get_text().strip().get_text().strip()
+			if str(html.find('span', {'id':'productTitle'})) != NOT_FOUND:
+				title = html.find('span', {'id':'productTitle'}).get_text().strip()
 			else:
 				title = 'Title not found'
-				
+
 			if str(html.find('span', {'id':'priceblock_ourprice'})) != NOT_FOUND:
 				price = html.find('span', {'id':'priceblock_ourprice'}).get_text().split('AED')[1]
 			elif str(html.find('span', {'class':'a-color-price'})) != NOT_FOUND:
