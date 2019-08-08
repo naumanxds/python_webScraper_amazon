@@ -16,9 +16,14 @@ SLEEP_SEC = 1
 fHandle = open('csvFileCreatedAt-' + datetime.now().strftime('%H-%M-%S') + '.csv', 'w')
 
 # write in file
-def writeFile(data):
-	csvWriter = csv.writer(fHandle)
-	csvWriter.writerow(data)
+def writeFile(data, url = ''):
+	try:
+		csvWriter = csv.writer(fHandle)
+		csvWriter.writerow(data)
+	except:
+		print('		>> Entry missed due to some error from this link = ' + url)
+		print('		>> ERRROR = ' + format(e))
+		print(' 	==========')
 
 # get html of the provided url page
 def getHtml(url):
@@ -85,12 +90,15 @@ def iterateLinks(subLinks):
 				text += l.get_text().strip()
 
 			data.append(text)
-			images = (html.find('div', {'id':'altImages'})).find_all('img')
-			for l in range(len(images) - 1):
-				data.append(images[l].get('src').split('._')[0] + '._SS400_.jpg')
-			writeFile(data)
+			if str(html.find('div', {'id':'altImages'})) != NOT_FOUND:
+				images = html.find('div', {'id':'altImages'}).find_all('img')
+				for l in range(len(images) - 1):
+					data.append(images[l].get('src').split('._')[0] + '._SS400_.jpg')
+			else:
+				data.append(' Image Not Found ')
+			writeFile(data, BASE_URL + link.find('a').get('href'))
 		except Exception as e:
-			print('		>> Entry missed due to some error from this link = ' + BASE_URL + link.get('href'))
+			print('		>> Entry missed due to some error from this link = ' + BASE_URL + link.find('a').get('href'))
 			print('		>> ERRROR = ' + format(e))
 			print(' 	==========')
 
@@ -110,14 +118,15 @@ writeFile([
 	'DESCRIPTION'
 ])
 try:
-	count = int(enteredUrl.split('&page=')[1][0])
+	count = enteredUrl.split('&page=')[1]
+	count = int(count.split('&')[0])
 except:
 	count = 1
 
-while count <= 200:
+while count <= 500:
 	html = getHtml(startUrl + '&page=' + str(count))
 	links = html.find_all('h2', {'class':'a-size-mini a-spacing-none a-color-base s-line-clamp-2'})
-	if str(links) == NOT_FOUND:
+	if not links:
 		break
 
 	iterateLinks(links)
