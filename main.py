@@ -127,6 +127,9 @@ while count <= 500:
 	html = getHtml(startUrl + '&page=' + str(count))
 	links = html.find_all('h2', {'class':'a-size-mini a-spacing-none a-color-base s-line-clamp-2'})
 	if not links:
+		links = html.find_all('h2', {'class':'a-size-mini a-spacing-none a-color-base s-line-clamp-4'})
+
+	if not links:
 		break
 
 	iterateLinks(links)
