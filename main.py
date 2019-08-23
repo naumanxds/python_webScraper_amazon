@@ -10,7 +10,7 @@ from bs4 import BeautifulSoup
 BASE_URL = 'https://www.amazon.ae'
 NOT_FOUND = 'None'
 INCREMENT_ONE = 1
-SLEEP_SEC = 1
+SLEEP_SEC = 5
 
 # create file with time attached to it for safty purposes
 fHandle = open('csvFileCreatedAt-' + datetime.now().strftime('%H-%M-%S') + '.csv', 'w')
@@ -38,12 +38,14 @@ def iterateLinks(subLinks):
 	for link in subLinks:
 		data = []
 		html = getHtml(BASE_URL + link.find('a').get('href'))
+		time.sleep(SLEEP_SEC)
 		try:
 			asin = html.find('input', {'id':'ASIN'})
 			if str(asin) != NOT_FOUND:
 				asin = asin.get('value')
 			else:
 				asin = 'ASIN Not Found'
+
 			if str(html.find('span', {'id':'productTitle'})) != NOT_FOUND:
 				title = html.find('span', {'id':'productTitle'}).get_text().strip()
 			else:
@@ -135,7 +137,6 @@ while count <= 500:
 	iterateLinks(links)
 	print(str(count) + ' == Pages Done')
 	count += INCREMENT_ONE
-	time.sleep(SLEEP_SEC)
 
 # close file
 fHandle.close()
