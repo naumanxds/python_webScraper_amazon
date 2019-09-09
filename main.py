@@ -20,10 +20,10 @@ def writeFile(data, url = ''):
 	try:
 		csvWriter = csv.writer(fHandle)
 		csvWriter.writerow(data)
-	except:
-		print('		>> Entry missed due to some error from this link = ' + url)
-		print('		>> ERRROR = ' + format(e))
-		print(' 	==========')
+	except Exception as e:
+		print('		>> Error in Writing Data into the file => ' + url)
+		print(' 	=========================================')
+		print('		>> ERRROR => ' + format(e))
 
 # get html of the provided url page
 def getHtml(url):
@@ -100,9 +100,9 @@ def iterateLinks(subLinks):
 				data.append(' Image Not Found ')
 			writeFile(data, BASE_URL + link.find('a').get('href'))
 		except Exception as e:
-			print('		>> Entry missed due to some error from this link = ' + BASE_URL + link.find('a').get('href'))
-			print('		>> ERRROR = ' + format(e))
-			print(' 	==========')
+			print('		>> Entry missed due to some error from this link => ' + BASE_URL + link.find('a').get('href'))
+			print(' 	===================================================')
+			print('		>> ERRROR => ' + format(e))
 
 # input for user
 enteredUrl = input('Please Enter Starting Point for Scrapper: ')
