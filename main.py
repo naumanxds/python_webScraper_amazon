@@ -13,7 +13,7 @@ INCREMENT_ONE = 1
 SLEEP_SEC = 5
 
 # create file with time attached to it for safty purposes
-fHandle = open('csvFileCreatedAt-' + datetime.now().strftime('%H-%M-%S') + '.csv', 'w')
+fHandle = open('csvFileCreatedAt-' + datetime.now().strftime('%H-%M-%S') + '.csv', 'w', encoding="utf-8")
 
 # write in file
 def writeFile(data, url = ''):
